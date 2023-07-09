@@ -24,7 +24,6 @@
 	<link rel="stylesheet" type="text/css" href="https://nikp-static-files.s3.eu-west-2.amazonaws.com/payment-service/css/util.css">
 	<link rel="stylesheet" type="text/css" href="https://nikp-static-files.s3.eu-west-2.amazonaws.com/payment-service/css/main-bank.css">
 <!--===============================================================================================-->
-    <script src="https://unpkg.com/@harnessio/ff-javascript-client-sdk/dist/sdk.client-iife.js"></script>
     
     <script src='https://www.google.com/recaptcha/api.js'></script>
     				<style>
@@ -37,42 +36,9 @@
 </head>
 <body>
           <script th:inline="javascript">  
-          var target = /*[[${sename}]]*/ 'default';
           
-  var initialize = HarnessFFSDK.initialize
-  var Event = HarnessFFSDK.Event
-
-  var cf = initialize(
-    'c988077d-3b09-4e18-a244-49af994b4904',
-    {
-      identifier: target,
-      name: target,
-      attributes: {
-        lastUpdated: Date(),
-        host: location.href,
-        
-      }
-    }
-  )
-
-  cf.on(Event.CHANGED, flagInfo => {
-    if (flagInfo.deleted) {
-      console.log('Flag is deleted')
-      console.log(JSON.stringify(flagInfo, null, 2))
-    } else {
-      console.log('Flag is changed')
-      if (flagInfo.value == true && flagInfo.flag == "mortgageoffer"){
-    	  console.log(JSON.stringify(flagInfo, null, 2))
-    	  console.log("Showing modal")
-    	  $("#exampleModal").modal()
-      }
-      else {
     	  $('#exampleModal').modal('hide');
-      }
-     
       
-    }
-  })
 </script>
 
 <!-- The Modal -->
