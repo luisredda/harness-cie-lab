@@ -1,7 +1,6 @@
 package com.nikp;
 
-import io.harness.cf.client.api.CfClient;
-import io.harness.cf.client.api.Config;
+//Step 1 - Import Harness FF SDK Here
 import io.prometheus.client.CollectorRegistry;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
@@ -30,8 +29,7 @@ public class PaymentApplication {
     @Autowired(required = false)
     PaymentService paymentService;
 
-	 @Value( "${harness.api.key}" )
-	 String apiKey;
+    //Step 2: Declare your Harness API Key here, getting the value from the environment variable.
     
 	 
     public static void main(String[] args) {
@@ -40,13 +38,7 @@ public class PaymentApplication {
     }
 
     
-    @Bean
-    public CfClient cfClient() {
-
-    	 CfClient cfClient =
-    	            new CfClient(this.apiKey, Config.builder().build());
-    	 return cfClient;
-    }
+   //Step 3: Initialize your FF SDK Here
     
     @Bean
     public CaptchaService captchaService() {
