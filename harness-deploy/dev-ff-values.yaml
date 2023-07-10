@@ -30,5 +30,6 @@ env:
     HARNESS_CLIENT_FF: <+pipeline.variables.clientkey>
     HARNESS_SE: <+pipeline.variables.seusername>
     HARNESS_BUILD: <+pipeline.sequenceId>
+    HARNESS_FF_KEY: <+pipeline.variables.serverkey>
   secrets:
     key2: value2
