@@ -25,7 +25,7 @@
 	<link rel="stylesheet" type="text/css" href="https://nikp-static-files.s3.eu-west-2.amazonaws.com/payment-service/css/main.css">
 <!--===============================================================================================-->
 	<!-- Insert Here JavaScript references -->
-
+<script src="https://unpkg.com/@harnessio/ff-javascript-client-sdk/dist/sdk.client-iife.js"></script>
 
 
 </head>
@@ -75,7 +75,48 @@
   
           <script th:inline="javascript">  
 
-    	  $('#exampleModal').modal('hide');
+		//Aqui se hace la inicialización de las variables target y SDK Key. Los valores 
+		//son provenientes de variables de ambiente rellenadas por el proceso de CI/CD.
+		
+		var target = /*[[${sename}]]*/ 'default';
+		var sdk= /*[[${clientffkey}]]*/ 'empty';
+		
+		var initialize = HarnessFFSDK.initialize
+		var Event = HarnessFFSDK.Event
+		
+		// Aqui se hace la inicialización de el SDK con el target, sdk key y también si
+		// puede agregar atributos adicionales como codigo de el cliente, categoria, etc.
+		
+		var cf = initialize(
+		sdk,
+			{
+				identifier: target,
+				name: target,
+				attributes: {
+				  lastUpdated: Date(),
+				  host: location.href,
+				}
+			}
+		)
+		
+		// Aqui es donde escuchamos por los eventos de cambios de las FFs.
+		cf.on(Event.CHANGED, flagInfo => {
+		if (flagInfo.deleted) {
+		console.log('Flag is deleted')
+		console.log(JSON.stringify(flagInfo, null, 2))
+		} else {
+		console.log('Flag is changed')
+		if (flagInfo.value == true && flagInfo.flag == "harnessoffer"){
+		    console.log(JSON.stringify(flagInfo, null, 2))
+		    console.log("Showing modal")
+		    $("#exampleModal").modal(). //Mostramos el PopUp
+		}
+		else {
+		    // se oculta el popup. Esa es la función que ya existia en la pagina!
+		    $('#exampleModal').modal('hide');  <!-- Keep this and adjust -->
+			}
+		 }
+		})
 
 	  </script>
 
