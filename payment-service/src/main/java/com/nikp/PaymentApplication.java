@@ -30,17 +30,26 @@ public class PaymentApplication {
     @Autowired(required = false)
     PaymentService paymentService;
 
-    //Step 2: Declare your Harness API Key here, getting the value from the environment variable.
-    
+	//Step 2: Declare your Harness API Key here, getting the value from the environment variable.
+	
+	@Value( "${harness.api.key}" )
+	String apiKey;
+	    
 	 
     public static void main(String[] args) {
         SpringApplication.run(PaymentApplication.class, args);
    
     }
 
-    
-   //Step 3: Initialize your FF SDK Here
-    
+    //Step 3: Initialize your FF SDK Here
+    @Bean
+    public CfClient cfClient() {
+
+    	 CfClient cfClient =
+    	            new CfClient(this.apiKey, Config.builder().build());
+    	 return cfClient;
+    }
+	
     @Bean
     public CaptchaService captchaService() {
     	return new CaptchaService();
