@@ -17,7 +17,9 @@ import com.nikp.payment.infrastructure.exceptions.ReCaptchaInvalidException;
 import com.nikp.payment.infrastructure.exceptions.ReCaptchaUnavailableException;
 
 //Step1: Import your Harness FF SDK dependencies here.
-
+import io.harness.cf.client.api.CfClient;
+import io.harness.cf.client.api.Config;
+import io.harness.cf.client.dto.Target;
 
 @Service("captchaService")
 public class CaptchaService extends AbstractCaptchaService {
@@ -25,7 +27,13 @@ public class CaptchaService extends AbstractCaptchaService {
     private final static Logger LOGGER = LoggerFactory.getLogger(CaptchaService.class);
 
      //Step 2: Reference Cfclient here and fetch the target name from the enviroment variable harness.se
+    //Step 2: Reference Cfclient here and fetch the target name from the enviroment variable harness.se
+    @Autowired
+    private CfClient cfClient;
     
+    @Value("${harness.se}" )
+    String targetName;
+	
     @Override
     public void processResponse(final String response) {
 	/**
@@ -45,7 +53,17 @@ public class CaptchaService extends AbstractCaptchaService {
          * Define you target on which you would like to evaluate the featureFlag 
 	 * Builds a target using specific key value pairs. This target can then be used by rules to evalue the flag
          */
-	    
+
+
+	HashMap<String,Object> map= new HashMap<>();
+        map.put("customerID", rn);
+        Target target = Target.builder()
+                .name(targetName)
+                .identifier(targetName)
+                .attributes(map)
+                .build();
+        
+	boolean result = cfClient.boolVariation("bankvalidation", target, false);
 
        
 
@@ -54,9 +72,9 @@ public class CaptchaService extends AbstractCaptchaService {
      *  This piece of code is the actual evaluation of the feature flag
      *  Uncomment the three lines below in order to start validating - Enable/Disable feature flag from the UI
      */
-      //if(result) {
-      //	   throw new BankValidationException("You have been selected for further bank validation, please call your bank");
-      // }
+      if(result) {
+         throw new BankValidationException("You have been selected for further bank validation, please call your bank");
+       }
     	
         securityCheck(response);
 
